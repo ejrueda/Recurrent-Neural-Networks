@@ -1,6 +1,6 @@
 class EUtilities:
         
-    def build_dataset(signal, window, binary_target=False, delete_constant_values=True, PNL=False):
+    def build_dataset(self,signal, window, binary_target=False, delete_constant_values=True, PNL=False):
         """
         función para construir un data set
         window: tamaño de la ventana a utilizar para construir el dataset
@@ -53,7 +53,7 @@ class EUtilities:
     
     #para crear señales multiples
     
-    def multi_signal(s_A, s_B):
+    def multi_signal(self,s_A, s_B):
         """
         dada dos señales s_A y s_B, se obtiene una multiseñal donde la
         señal que predomina para la contrucción es s_A
@@ -74,7 +74,7 @@ class EUtilities:
 
     #redimensionar la salida del score
     
-    def redim(signal):
+    def redim(self,signal):
         '''
         recibe un array plano el cual convierte en dos salidas,
         en una de estas se encuentran los resultados pertinentes
@@ -91,7 +91,7 @@ class EUtilities:
 
    #para hacer una validación por pasos
     
-    def step_validation(estimator, X, y, cv):
+    def step_validation(self,estimator, X, y, cv):
         '''
         Recibe el estimador,X,y, y un generador cv con el cual hace la validación
         dependiendo que la configuración que este tenga
@@ -104,7 +104,7 @@ class EUtilities:
 
     #particiona el dataset para sacar los indices para la validación por pasos
     
-    def v_split(X, n_bdtrain, n_bdtest, mday):
+    def v_split(self,X, n_bdtrain, n_bdtest, mday):
 
         """"
         Hace un particionado del dataset, para tomar n_bdtrain días para entrenar
