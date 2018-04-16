@@ -96,6 +96,7 @@ class EUtilities:
         Recibe el estimador,X,y, y un generador cv con el cual hace la validación
         dependiendo que la configuración que este tenga
         '''
+        import numpy as np
         result = []
         for index in cv:
             estimator.fit(X.iloc[index[0]], y[index[0]])
