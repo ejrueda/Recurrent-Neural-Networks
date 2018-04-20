@@ -8,21 +8,22 @@ class PNLEstimatorWrapper:
         self.exclude_PNL_column_from_training = exclude_PNL_column_from_training
         
     def fit(self, X, y):
-        assert self.PNL_column in X.columns, "column "+self.PNL_column+" not in X dataframe"
+        assert 'PNL_1' and 'PNL_0' in X.columns, "column "+self.PNL_column+" not in X dataframe"
         if self.exclude_PNL_column_from_training:
-            X = X[[col for col in X.columns if col!=self.PNL_column]]
+            X = X[[col for col in X.columns if col!=self.PNL_column[0] and col!=self.PNL_column[1]]]
         self.estimator.fit(X,y)
         
     def predict(self, X):
-        assert self.PNL_column in X.columns, "column "+self.PNL_column+" not in X dataframe"
+        assert 'PNL_1' and 'PNL_0' in X.columns, "column "+self.PNL_column+" not in X dataframe"
         if self.exclude_PNL_column_from_training:
-            X = X[[col for col in X.columns if col!=self.PNL_column]]
+            X = X[[col for col in X.columns if col!=self.PNL_column[0] and col!=self.PNL_column[1]]]
         return self.estimator.predict(X)
     
     def score(self, X, y):
-        PNL = X[self.PNL_column]
+        pnl_1 = X[self.PNL_column[0]]
+        pnl_0 = X[self.PNL_column[1]]
         pre = self.predict(X)
-        r = sum((y==pre)*abs(PNL) - (y!=pre)*abs(PNL))
+        r = sum((pre==1)*pnl_1 + (pre==0)*pnl_0)
         sell = sum((pre==0)*1)
         buy = sum((pre==1)*1)
         
