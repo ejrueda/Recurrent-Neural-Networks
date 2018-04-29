@@ -1,3 +1,4 @@
+# %load ../code/build_dataset.py
 def build_dataset(df, window, binary_target=False, delete_constant_values=True, PNL=False):
     """
     función para construir un data set
@@ -33,8 +34,13 @@ def build_dataset(df, window, binary_target=False, delete_constant_values=True, 
                     pnl_buy.append(signal[i+window] - ask[i+window-1]) #calcular pnl en caso de compra-venta
                 
                 if binary_target == True:
-                    if signal[i+window] < signal[i+window-1]: binary.append(0) # 0 si baja
-                    if signal[i+window] > signal[i+window-1]: binary.append(1) # 1 si sube
+                    if signal[i+window] < signal[i+window-1]: 
+                        if (signal[i+window-1] - ask[i+window]) > 0: binary.append(0) # 0 si baja y gano
+                        else: binary.append(2) # 2 si baja pero pierdo
+                            
+                    if signal[i+window] > signal[i+window-1]: # 1 si sube
+                        if (signal[i+window] - ask[i+window-1]) > 0: binary.append(1) # 1 si sube y gano
+                        else: binary.append(3) # 3 si sube pero pierdo
                         
             else: indx = indx.delete(len(result))
                 
@@ -46,9 +52,15 @@ def build_dataset(df, window, binary_target=False, delete_constant_values=True, 
                 pnl_buy.append(signal[i+window] - ask[i+window-1]) #calcular pnl en caso de compra-venta
             
         if binary_target == True and delete_constant_values == False:
-            if signal[i+window] == signal[i+window-1]: binary.append(2) # 2 si se mantiene
-            if signal[i+window] < signal[i+window-1]: binary.append(0) # 1 si baja
-            if signal[i+window] > signal[i+window-1]: binary.append(1) # 0 si sube
+            if signal[i+window] == signal[i+window-1]: binary.append(4) # 2 si se mantiene
+                
+            if signal[i+window] < signal[i+window-1]:
+                if (signal[i+window-1] - ask[i+window]) > 0: binary.append(0) # 0 si baja y gano
+                else: binary.append(2) # 2 si baja pero pierdo
+                    
+            if signal[i+window] > signal[i+window-1]:
+                if (signal[i+window] - ask[i+window-1]) > 0: binary.append(1) # 1 si sube y gano
+                else: binary.append(3) # 3 si sube pero pierdo
     
     data = pd.DataFrame(np.array(result), index=indx)
     y = np.array(data.iloc[:,window])

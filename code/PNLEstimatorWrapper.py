@@ -20,12 +20,15 @@ class PNLEstimatorWrapper:
         return self.estimator.predict(X)
     
     def score(self, X, y):
-        pnl_1 = X[self.PNL_column[0]]
-        pnl_0 = X[self.PNL_column[1]]
+        pnl_1 = X.PNL_1
+        pnl_0 = X.PNL_0
         pre = self.predict(X)
         r = sum((pre==1)*pnl_1 + (pre==0)*pnl_0)
-        sell = sum((pre==0)*1)
-        buy = sum((pre==1)*1)
+        sell = sum(pre==0) + sum(pre==2)
+        buy = sum(pre==1) + sum(pre==3)
+        #percent_0 = np.mean(y==pre)*100
+        percent_1 = np.mean((pre==1)*(y==1))
+        percent_0 = np.mean((pre==0)*(y==0))
         
         count_ones, count_zeros = 0,0
         l_one, l_zero = [],[]
@@ -42,7 +45,7 @@ class PNLEstimatorWrapper:
         l_one.append(count_ones)
         
         #return np.array([r,buy,sell,max(l_one),max(l_zero)])
-        return np.array([r,buy,sell,max(l_one),max(l_zero)]), pre
+        return np.array([r,buy,sell,max(l_one),max(l_zero),percent_1,percent_0]), pre
         
     def get_params(self, deep=False):
         return {"PNL_column": self.PNL_column,
