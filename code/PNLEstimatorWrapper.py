@@ -27,8 +27,10 @@ class PNLEstimatorWrapper:
         sell = sum(pre==0) + sum(pre==2)
         buy = sum(pre==1) + sum(pre==3)
         #percent_0 = np.mean(y==pre)*100
-        percent_1 = np.mean((pre==1)*(y==1))
-        percent_0 = np.mean((pre==0)*(y==0))
+        percent_1 = np.mean((pre==1)*(y==1)) # si sube y gano
+        percent_0 = np.mean((pre==0)*(y==0)) # si baja y gano
+        percent_3 = np.mean((pre==3)*(y==3)) # si sube y pierdo
+        percent_2 = np.mean((pre==2)*(y==2)) # si baja y pierdo
         
         count_ones, count_zeros = 0,0
         l_one, l_zero = [],[]
@@ -45,7 +47,7 @@ class PNLEstimatorWrapper:
         l_one.append(count_ones)
         
         #return np.array([r,buy,sell,max(l_one),max(l_zero)])
-        return np.array([r,buy,sell,max(l_one),max(l_zero),percent_1,percent_0]), pre
+        return np.array([r,buy,sell,max(l_one),max(l_zero),percent_1,percent_0,percent_3,percent_2]), pre
         
     def get_params(self, deep=False):
         return {"PNL_column": self.PNL_column,
